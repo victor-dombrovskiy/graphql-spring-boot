@@ -35,7 +35,7 @@ public class GraphQLJavaToolsAutoConfiguration {
     private ApplicationContext applicationContext;
 
     @Bean
-    @ConditionalOnBean({SchemaParserDictionary.class, GraphQLResolver.class})
+    @ConditionalOnBean(GraphQLResolver.class)
     @ConditionalOnMissingBean
     public SchemaParser schemaParser(List<GraphQLResolver<?>> resolvers) throws IOException {
 
