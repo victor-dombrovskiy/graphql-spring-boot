@@ -1,5 +1,6 @@
 package com.oembedler.moon.graphql.boot.test.graphqlJavaTools;
 
+import com.coxautodev.graphql.tools.SchemaParser;
 import com.oembedler.moon.graphql.boot.GraphQLJavaToolsAutoConfiguration;
 import com.oembedler.moon.graphql.boot.test.AutoConfigurationTest;
 import graphql.schema.GraphQLSchema;
@@ -26,6 +27,7 @@ public class GraphQLJavaToolsAutoConfigurationTest extends AutoConfigurationTest
     public void appContextLoads() {
         load(BaseConfiguration.class);
 
+        Assert.assertNotNull(this.context.getBean(SchemaParser.class));
         Assert.assertNotNull(this.context.getBean(GraphQLSchema.class));
     }
 }
