@@ -3,5 +3,4 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod +x gradlew
-script: ./gradlew clean check
-after_failure: cat ./graphql-spring-boot-autoconfigure/build/reports/tests/test/index.html
+script: ./gradlew check

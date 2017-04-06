@@ -79,6 +79,12 @@ subprojects {
         archives javadocJar
     }
 
+    test {
+        testLogging {
+            showStandardStreams = true
+        }
+    }
+
     publishing {
         publications {
             mainProjectPublication(MavenPublication) {
@@ -133,7 +139,6 @@ subprojects {
             licenses = [PROJECT_LICENSE]
             vcsUrl = PROJECT_GIT_REPO_URL
             version {
-                println "Uploading version: $project.version"
                 name = project.version
             }
         }
