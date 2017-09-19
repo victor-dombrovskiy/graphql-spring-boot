@@ -35,6 +35,7 @@ import graphql.servlet.ObjectMapperConfigurer;
 import graphql.servlet.SimpleGraphQLServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -43,6 +44,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -59,7 +61,7 @@ import java.util.Map;
 @Configuration
 @ConditionalOnWebApplication
 @ConditionalOnClass(DispatcherServlet.class)
-@ConditionalOnBean({GraphQLSchema.class, GraphQLSchemaProvider.class})
+@Conditional(GraphQLWebAutoConfiguration.OnSchemaOrSchemaProvider.class)
 @ConditionalOnProperty(value = "graphql.servlet.enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter({GraphQLJavaToolsAutoConfiguration.class})
 @EnableConfigurationProperties(GraphQLServletProperties.class)
@@ -152,5 +154,19 @@ public class GraphQLWebAutoConfiguration {
     @Bean
     ServletRegistrationBean graphQLServletRegistrationBean(GraphQLServlet servlet) {
         return new ServletRegistrationBean(servlet, graphQLServletProperties.getServletMapping());
+    }
+
+    static class OnSchemaOrSchemaProvider extends AnyNestedCondition {
+
+        public OnSchemaOrSchemaProvider() {
+            super(ConfigurationPhase.PARSE_CONFIGURATION);
+        }
+
+        @ConditionalOnBean(GraphQLSchema.class)
+        static class OnSchema {}
+
+        @ConditionalOnBean(GraphQLSchemaProvider.class)
+        static class OnSchemaProvider {}
+
     }
 }
